@@ -5,9 +5,9 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
 private val LightColorScheme = lightColorScheme(
-    primary = MainBgColor,
-    secondary = PurpleGrey40,
-    tertiary = Pink40,
+    primary = DarkBlue,
+    secondary = LightBlue,
+    tertiary = ColorGray,
     background = MainBgColor
 )
 
