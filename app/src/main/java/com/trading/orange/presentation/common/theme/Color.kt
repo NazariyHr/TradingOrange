@@ -10,3 +10,5 @@ val DarkBlue = Color(29, 36, 57)
 val LightBlue = Color(40, 51, 78)
 
 val MainBgColor = DarkBlue
+
+fun String.toColor(): Color = Color(android.graphics.Color.parseColor(this))
