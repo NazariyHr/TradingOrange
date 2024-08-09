@@ -249,7 +249,7 @@ fun AppNavigation(
                     )
                 ) {
                     val route = it.toRoute<Screen.StrategyDetails>()
-                    StrategyDetailsScreenRoot(navController)
+                    StrategyDetailsScreenRoot(route.strategyId, navController)
                     DisposableEffect(true) {
                         openedScreens = openedScreens + route
                         onDispose {
@@ -277,7 +277,7 @@ fun AppNavigation(
                     )
                 ) {
                     val route = it.toRoute<Screen.ArticleDetails>()
-                    ArticleDetailsScreenRoot(navController)
+                    ArticleDetailsScreenRoot(route.articleId, navController)
                     DisposableEffect(true) {
                         openedScreens = openedScreens + route
                         onDispose {

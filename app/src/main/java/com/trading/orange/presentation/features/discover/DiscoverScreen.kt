@@ -34,6 +34,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.trading.orange.domain.model.NewsArticle
+import com.trading.orange.domain.model.QuickReadArticle
+import com.trading.orange.domain.model.StrategyArticle
 import com.trading.orange.presentation.common.components.MainScreensLayout
 import com.trading.orange.presentation.common.modifiers.safeSingleClick
 import com.trading.orange.presentation.common.theme.ColorOrange
@@ -42,6 +44,8 @@ import com.trading.orange.presentation.common.theme.FontFamilyAvenirHeavy
 import com.trading.orange.presentation.common.theme.FontFamilyAvenirLight
 import com.trading.orange.presentation.common.theme.TradingOrangeTheme
 import com.trading.orange.presentation.features.discover.components.NewsItem
+import com.trading.orange.presentation.features.discover.components.QuickReadItem
+import com.trading.orange.presentation.features.discover.components.StrategyItem
 import com.trading.orange.presentation.navigation.Screen
 
 @Composable
@@ -57,15 +61,21 @@ fun DiscoverScreenRoot(
         onAllNewsClicked = {
             navController.navigate(Screen.NewsList)
         },
-        onStrategiesClicked = {
+        onAllStrategiesClicked = {
             navController.navigate(Screen.StrategiesList)
         },
-        onArticlesClicked = {
+        onAllQuickReadArticlesClicked = {
             navController.navigate(Screen.ArticlesList)
         },
         onNewsArticleClicked = { newsArticle ->
             val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(newsArticle.link))
             context.startActivity(browserIntent)
+        },
+        onStrategyArticleClicked = { strategyArticle ->
+            navController.navigate(Screen.StrategyDetails(strategyArticle.id))
+        },
+        onQuickReadArticleClicked = { quickReadArticle ->
+            navController.navigate(Screen.ArticleDetails(quickReadArticle.id))
         }
     )
 }
@@ -74,9 +84,11 @@ fun DiscoverScreenRoot(
 private fun DiscoverScreen(
     state: DiscoverScreenState,
     onAllNewsClicked: () -> Unit,
-    onStrategiesClicked: () -> Unit,
-    onArticlesClicked: () -> Unit,
-    onNewsArticleClicked: (NewsArticle) -> Unit
+    onAllStrategiesClicked: () -> Unit,
+    onAllQuickReadArticlesClicked: () -> Unit,
+    onNewsArticleClicked: (NewsArticle) -> Unit,
+    onStrategyArticleClicked: (StrategyArticle) -> Unit,
+    onQuickReadArticleClicked: (QuickReadArticle) -> Unit
 ) {
     val d = LocalDensity.current
     var screenWidth by remember {
@@ -161,19 +173,155 @@ private fun DiscoverScreen(
                     }
                 }
             }
+
+            Row(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 32.dp)
+            ) {
+                Text(
+                    text = "Strategies",
+                    style = DefaultTextStyle.copy(
+                        color = Color.White,
+                        fontFamily = FontFamilyAvenirHeavy,
+                        fontSize = 20.sp
+                    )
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                if (!state.strategies.isNullOrEmpty()) {
+                    Text(
+                        text = "See all",
+                        style = DefaultTextStyle.copy(
+                            color = ColorOrange,
+                            fontFamily = FontFamilyAvenirLight,
+                            fontSize = 14.sp
+                        ),
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .safeSingleClick {
+                                onAllStrategiesClicked()
+                            }
+                    )
+                }
+            }
+
+            if (state.strategies == null) {
+                Box(
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 14.dp)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(30.dp),
+                        color = ColorOrange
+                    )
+                }
+            }
+
+            if (state.strategies != null) {
+                LazyRow(
+                    modifier = Modifier.padding(start = 16.dp, top = 14.dp)
+                ) {
+                    itemsIndexed(
+                        state.strategies,
+                        key = { _, strategyArticle -> strategyArticle.id }
+                    ) { index, strategyArticle ->
+                        val gap = 12.dp
+                        StrategyItem(
+                            strategyArticle = strategyArticle,
+                            modifier = Modifier
+                                .padding(
+                                    start = if (index == 0) 0.dp else gap / 2,
+                                    end = if (index == state.strategies.size - 1) 16.dp else gap / 2
+                                )
+                                .safeSingleClick {
+                                    onStrategyArticleClicked(strategyArticle)
+                                }
+                        )
+                    }
+                }
+            }
+
+            Row(
+                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 32.dp)
+            ) {
+                Text(
+                    text = "Quick Reads",
+                    style = DefaultTextStyle.copy(
+                        color = Color.White,
+                        fontFamily = FontFamilyAvenirHeavy,
+                        fontSize = 20.sp
+                    )
+                )
+                Spacer(modifier = Modifier.weight(1f))
+                if (!state.quickReads.isNullOrEmpty()) {
+                    Text(
+                        text = "See all",
+                        style = DefaultTextStyle.copy(
+                            color = ColorOrange,
+                            fontFamily = FontFamilyAvenirLight,
+                            fontSize = 14.sp
+                        ),
+                        modifier = Modifier
+                            .align(Alignment.CenterVertically)
+                            .safeSingleClick {
+                                onAllQuickReadArticlesClicked()
+                            }
+                    )
+                }
+            }
+
+            if (state.quickReads == null) {
+                Box(
+                    modifier = Modifier
+                        .padding(start = 16.dp, top = 14.dp)
+                        .fillMaxWidth(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(30.dp),
+                        color = ColorOrange
+                    )
+                }
+            }
+
+            if (state.quickReads != null) {
+                LazyRow(
+                    modifier = Modifier.padding(start = 16.dp, top = 14.dp)
+                ) {
+                    itemsIndexed(
+                        state.quickReads,
+                        key = { _, quickReadArticle -> quickReadArticle.id }
+                    ) { index, quickReadArticle ->
+                        val gap = 12.dp
+                        QuickReadItem(
+                            quickReadArticle = quickReadArticle,
+                            modifier = Modifier
+                                .padding(
+                                    start = if (index == 0) 0.dp else gap / 2,
+                                    end = if (index == state.quickReads.size - 1) 16.dp else gap / 2
+                                )
+                                .safeSingleClick {
+                                    onQuickReadArticleClicked(quickReadArticle)
+                                }
+                        )
+                    }
+                }
+            }
         }
     }
 }
 
 @Preview
 @Composable
-private fun DiscoverScreenPreview() {
+private fun DiscoverScreenWithLoadedDataPreview() {
     val news = mutableListOf<NewsArticle>()
+    val strategies = mutableListOf<StrategyArticle>()
+    val quickReads = mutableListOf<QuickReadArticle>()
 
     repeat(2) {
         news.add(
             NewsArticle(
-                title = "Fed guidance, BOE, Meta's results, Apple - what's moving markets",
+                title = "Fed guidance, BOE, Meta's results, Apple - what's moving markets" + " " + news.size,
                 text = "The U.S. Federal Reserve left interest rates unchanged at the conclusion of its latest policy-setting meeting on Wednesday, as widely expected, but acknowledged recent progress on inflation, raising investor hopes that the central bank could begin cutting rates in the near future.",
                 imageDataProvider = null,
                 link = ""
@@ -181,15 +329,62 @@ private fun DiscoverScreenPreview() {
         )
     }
 
+    repeat(6) {
+        strategies.add(
+            StrategyArticle(
+                id = strategies.count(),
+                title = "Bollinge R’S friend (BB, MACD)",
+                type = "Trend",
+                timeframe = "5 - 15 s",
+                assets = "Currency pairs",
+                difficultyTitle = "Easy",
+                difficultyColorHex = "#37C757",
+                text = "Bollinger Bands (BB) is a world-famous momentum indicator created by financial analyst John Bollinger. If you are familiar with BB, you know how good it is in indicating trends and flats. This strategy lets you improve your trading experience by inviting Bollinger’s “best friend” — MACD.",
+                imageDataProvider = null
+            )
+        )
+    }
+
+    repeat(6) {
+        quickReads.add(
+            QuickReadArticle(
+                id = quickReads.count(),
+                title = "Simple trading book",
+                text = "The U.S. Federal Reserve left interest rates...",
+                imageDataProvider = null
+            )
+        )
+    }
+
     TradingOrangeTheme {
         DiscoverScreen(
             state = DiscoverScreenState(
-                news = null//news
+                news = news,
+                strategies = strategies,
+                quickReads = quickReads
             ),
             onAllNewsClicked = {},
-            onStrategiesClicked = {},
-            onArticlesClicked = {},
-            onNewsArticleClicked = {}
+            onAllStrategiesClicked = {},
+            onAllQuickReadArticlesClicked = {},
+            onNewsArticleClicked = {},
+            onStrategyArticleClicked = {},
+            onQuickReadArticleClicked = {}
+        )
+    }
+}
+
+@Preview
+@Composable
+private fun DiscoverScreenWithDataLoadingProcessPreview() {
+    TradingOrangeTheme {
+        DiscoverScreen(
+            state = DiscoverScreenState(),
+            onAllNewsClicked = {},
+            onAllStrategiesClicked = {},
+            onAllQuickReadArticlesClicked = {},
+            onNewsArticleClicked = {},
+            onStrategyArticleClicked = {},
+            onQuickReadArticleClicked = {}
         )
     }
 }

@@ -1,5 +1,6 @@
 package com.trading.orange.data.appwrite
 
+import com.trading.orange.data.appwrite.AppWriteConstants.ARTICLES_IMAGES_BUCKET_NAME
 import com.trading.orange.data.appwrite.AppWriteConstants.NEWS_IMAGES_BUCKET_NAME
 import io.appwrite.Client
 import io.appwrite.Query
@@ -49,7 +50,9 @@ class AppWriteStorage {
     suspend fun getRandomImageFileIds(neededImagesCount: Int): List<String> {
         val bucketId = getNewsImagesBucketId() ?: return emptyList()
 
-        val allImagesIdsList = storage.listFiles(bucketId).files.map { it.id }
+        val allImagesIdsList = storage.listFiles(bucketId).files.map {
+            it.id
+        }
         val imagesCountToReturn =
             if (allImagesIdsList.count() < neededImagesCount) allImagesIdsList.count() else neededImagesCount
 
@@ -73,9 +76,67 @@ class AppWriteStorage {
         )
     }
 
+    suspend fun getImagePreview(
+        fileId: String,
+        widthPx: Long,
+        heightPx: Long
+    ): ByteArray? {
+        val bucketId = getNewsImagesBucketId() ?: return null
+        return storage.getFilePreview(
+            bucketId = bucketId,
+            fileId = fileId,
+            width = widthPx,
+            height = heightPx
+        )
+    }
+
+    suspend fun getImageContentByFileName(fileName: String): ByteArray? {
+        val bucketId = getArticlesImagesBucketId() ?: return null
+
+        val fileId = storage
+            .listFiles(bucketId = bucketId)
+            .files
+            .firstOrNull { it.name == fileName }
+            ?.id ?: return null
+
+        return storage.getFileView(
+            bucketId = bucketId,
+            fileId = fileId
+        )
+    }
+
+    suspend fun getImagePreviewByFileName(
+        fileName: String,
+        widthPx: Long,
+        heightPx: Long
+    ): ByteArray? {
+        val bucketId = getArticlesImagesBucketId() ?: return null
+
+        val fileId = storage
+            .listFiles(bucketId = bucketId)
+            .files
+            .firstOrNull { it.name == fileName }
+            ?.id ?: return null
+
+        return storage.getFilePreview(
+            bucketId = bucketId,
+            fileId = fileId,
+            width = widthPx,
+            height = heightPx
+        )
+    }
+
     private suspend fun getNewsImagesBucketId(): String? {
         return storage
             .listBuckets(queries = listOf(Query.search("name", NEWS_IMAGES_BUCKET_NAME)))
+            .buckets
+            .firstOrNull()
+            ?.id
+    }
+
+    private suspend fun getArticlesImagesBucketId(): String? {
+        return storage
+            .listBuckets(queries = listOf(Query.search("name", ARTICLES_IMAGES_BUCKET_NAME)))
             .buckets
             .firstOrNull()
             ?.id

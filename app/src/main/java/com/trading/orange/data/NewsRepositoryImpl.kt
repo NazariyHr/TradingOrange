@@ -39,32 +39,61 @@ class NewsRepositoryImpl(
                         if (randomImageIds.size - 1 >= index) {
                             newsArticleDto.toNewsArticle(
                                 imageDataProvider = object : ImageProvider() {
-                                    override suspend fun provideImage(): ByteArray? {
+                                    override suspend fun provideImage(
+                                        widthPx: Long?,
+                                        heightPx: Long?
+                                    ): ByteArray? {
                                         val fileId = randomImageIds[index]
                                         if (cachedImages.containsKey(fileId)) cachedImages[fileId]
                                         return cachedImages[fileId]
-                                            ?: appWriteStorage.getImageContent(
-                                                fileId
-                                            )
-                                                .also {
-                                                    cachedImages[fileId] = it
-                                                }
+                                            ?: if (widthPx != null && heightPx != null) {
+                                                appWriteStorage.getImagePreview(
+                                                    fileId = fileId,
+                                                    widthPx = widthPx,
+                                                    heightPx = heightPx
+                                                )
+                                                    .also {
+                                                        cachedImages[fileId] = it
+                                                    }
+                                            } else {
+                                                appWriteStorage.getImageContent(
+                                                    fileId
+                                                )
+                                                    .also {
+                                                        cachedImages[fileId] = it
+                                                    }
+                                            }
+
                                     }
                                 }
                             )
                         } else {
                             newsArticleDto.toNewsArticle(
                                 imageDataProvider = object : ImageProvider() {
-                                    override suspend fun provideImage(): ByteArray? {
+                                    override suspend fun provideImage(
+                                        widthPx: Long?,
+                                        heightPx: Long?
+                                    ): ByteArray? {
                                         val fileId = randomImageIds.lastOrNull() ?: return null
                                         if (cachedImages.containsKey(fileId)) cachedImages[fileId]
                                         return cachedImages[fileId]
-                                            ?: appWriteStorage.getImageContent(
-                                                fileId
-                                            )
-                                                .also {
-                                                    cachedImages[fileId] = it
-                                                }
+                                            ?: if (widthPx != null && heightPx != null) {
+                                                appWriteStorage.getImagePreview(
+                                                    fileId = fileId,
+                                                    widthPx = widthPx,
+                                                    heightPx = heightPx
+                                                )
+                                                    .also {
+                                                        cachedImages[fileId] = it
+                                                    }
+                                            } else {
+                                                appWriteStorage.getImageContent(
+                                                    fileId
+                                                )
+                                                    .also {
+                                                        cachedImages[fileId] = it
+                                                    }
+                                            }
                                     }
                                 }
                             )

@@ -20,6 +20,7 @@ import com.trading.orange.presentation.common.theme.TradingOrangeTheme
 
 @Composable
 fun ArticleDetailsScreenRoot(
+    articleId: Int,
     navController: NavController,
     viewModel: ArticleDetailsViewModel =
         hiltViewModel()
