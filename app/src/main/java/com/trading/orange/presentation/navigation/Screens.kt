@@ -5,26 +5,33 @@ import kotlinx.parcelize.Parcelize
 import kotlinx.serialization.Serializable
 
 sealed class Screen {
+    @Parcelize
     @Serializable
-    data object Discover : Screen()
+    data object Discover : Screen(), Parcelable
 
+    @Parcelize
     @Serializable
-    data object Training : Screen()
+    data object Training : Screen(), Parcelable
 
+    @Parcelize
     @Serializable
-    data object Signals : Screen()
+    data object Signals : Screen(), Parcelable
 
+    @Parcelize
     @Serializable
-    data object ContactUs : Screen()
+    data object ContactUs : Screen(), Parcelable
 
+    @Parcelize
     @Serializable
-    data object NewsList : Screen()
+    data object NewsList : Screen(), Parcelable
 
+    @Parcelize
     @Serializable
-    data object StrategiesList : Screen()
+    data object StrategiesList : Screen(), Parcelable
 
+    @Parcelize
     @Serializable
-    data object ArticlesList : Screen()
+    data object ArticlesList : Screen(), Parcelable
 
     @Serializable
     @Parcelize
