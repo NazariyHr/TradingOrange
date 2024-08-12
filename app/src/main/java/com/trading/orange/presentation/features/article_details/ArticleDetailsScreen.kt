@@ -96,7 +96,6 @@ private fun ArticleDetailsScreen(
     ) {
         Column(
             modifier = Modifier
-                .verticalScroll(rememberScrollState())
                 .onPlaced {
                     imageWidth = it.size.width.toLong()
                 }
@@ -114,46 +113,52 @@ private fun ArticleDetailsScreen(
 
             Spacer(modifier = Modifier.height(16.dp))
 
-            if (state.quickReadArticle != null) {
-                AsyncImage(
-                    modifier = Modifier
-                        .height(220.dp)
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(8.dp)),
-                    model = image,
-                    contentDescription = null,
-                    error = painterResource(id = R.drawable.no_image),
-                    placeholder = painterResource(id = R.drawable.no_image),
-                    contentScale = ContentScale.Crop
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                Text(
-                    text = state.quickReadArticle.title,
-                    style = DefaultTextStyle.copy(
-                        color = Color.White,
-                        fontFamily = FontFamilyAvenirRegular,
-                        fontSize = 16.sp
+            Column(
+                modifier = Modifier
+                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth()
+            ) {
+                if (state.quickReadArticle != null) {
+                    AsyncImage(
+                        modifier = Modifier
+                            .height(220.dp)
+                            .fillMaxWidth()
+                            .clip(RoundedCornerShape(8.dp)),
+                        model = image,
+                        contentDescription = null,
+                        error = painterResource(id = R.drawable.no_image),
+                        placeholder = painterResource(id = R.drawable.no_image),
+                        contentScale = ContentScale.Crop
                     )
-                )
 
-                Spacer(
-                    modifier = Modifier
-                        .padding(vertical = 16.dp)
-                        .height(1.dp)
-                        .background(LightBlue)
-                        .fillMaxWidth()
-                )
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                Text(
-                    text = state.quickReadArticle.text.toHtmlString(),
-                    style = DefaultTextStyle.copy(
-                        color = Color.White,
-                        fontFamily = FontFamilyAvenirRegular,
-                        fontSize = 16.sp
+                    Text(
+                        text = state.quickReadArticle.title,
+                        style = DefaultTextStyle.copy(
+                            color = Color.White,
+                            fontFamily = FontFamilyAvenirRegular,
+                            fontSize = 16.sp
+                        )
                     )
-                )
+
+                    Spacer(
+                        modifier = Modifier
+                            .padding(vertical = 16.dp)
+                            .height(1.dp)
+                            .background(LightBlue)
+                            .fillMaxWidth()
+                    )
+
+                    Text(
+                        text = state.quickReadArticle.text.toHtmlString(),
+                        style = DefaultTextStyle.copy(
+                            color = Color.White,
+                            fontFamily = FontFamilyAvenirRegular,
+                            fontSize = 16.sp
+                        )
+                    )
+                }
             }
         }
     }

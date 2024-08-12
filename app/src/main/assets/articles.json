@@ -8,7 +8,7 @@
       "assets": "Currency pairs",
       "difficulty_title": "Easy",
       "difficulty_color": "#37C757",
-      "text": "Bollinger Bands (BB) is a world-famous momentum..."
+      "text": "Bollinger Bands (BB) is a world-famous momentum indicator created by financial analyst John Bollinger. If you are familiar with BB, you know how good it is in indicating trends and flats. This strategy lets you improve your trading experience by inviting Bollinger’s “best friend” — MACD.\n\nA piece of theory\nBB indicates asset volatility. When the price starts increasing or decreasing with intensity, the bands widen. On the contrary, when no significant price moves, the bands stay tight to the indicator’s middle line. The middle line shows the trend direction, up or down.\nWhen Bollinger Bands start widening, be on alert. Conclude the trade only when the price exceeds the indicator's upper or lower band.\n\nMACD consists of the MACD line and the signal line. The MACD line reacts to price changes faster than the signal line. The indicator also has a histogram that changes color depending on the price momentum intensity."
     },
     {
       "image_file_name": "pigs.png",
