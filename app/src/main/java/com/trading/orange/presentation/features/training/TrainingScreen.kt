@@ -133,9 +133,6 @@ private fun TrainingScreen(
         mutableStateOf(0.dp)
     }
 
-    var amount by rememberSaveable {
-        mutableIntStateOf(0)
-    }
     var amountDropDownOpened by rememberSaveable {
         mutableStateOf(false)
     }
@@ -143,12 +140,12 @@ private fun TrainingScreen(
         mutableStateOf(listOf(1, 5, 10, 20, 50, 100))
     }
 
-    val payout by remember(amount, state.coefficient) {
+    val payout by remember(state.preparedAmount, state.coefficient) {
         derivedStateOf {
             String.format(
                 Locale.US,
                 "$%.2f",
-                (amount.toFloat() + amount.toFloat() * state.coefficient)
+                (state.preparedAmount.toFloat() + state.preparedAmount.toFloat() * state.coefficient)
             )
         }
     }
@@ -658,7 +655,11 @@ private fun TrainingScreen(
                                                     ),
                                                     modifier = Modifier
                                                         .safeSingleClick {
-                                                            amount = itemAmount
+                                                            onAction(
+                                                                TrainingScreenAction.OnNewPreparedAmountSelected(
+                                                                    itemAmount
+                                                                )
+                                                            )
                                                             amountDropDownOpened = false
                                                         }
                                                 )
@@ -689,7 +690,7 @@ private fun TrainingScreen(
                                                 modifier = Modifier.align(Alignment.CenterHorizontally)
                                             )
                                             Text(
-                                                text = "$$amount",
+                                                text = "$${state.preparedAmount}",
                                                 style = DefaultTextStyle.copy(
                                                     color = Color.White,
                                                     fontSize = 14.sp,
@@ -759,13 +760,13 @@ private fun TrainingScreen(
                         ) {
                             UpButton(
                                 modifier = Modifier.weight(1f),
-                                enabled = state.bet == null && amount != 0 && !(minutes == 0 && seconds == 0),
+                                enabled = state.bet == null && state.preparedAmount != 0 && !(minutes == 0 && seconds == 0),
                                 onCallClicked = {
                                     onAction(
                                         TrainingScreenAction.OnUpClicked(
                                             minutes,
                                             seconds,
-                                            amount
+                                            state.preparedAmount
                                         )
                                     )
                                 }
@@ -773,13 +774,13 @@ private fun TrainingScreen(
                             Spacer(modifier = Modifier.width(12.dp))
                             DownButton(
                                 modifier = Modifier.weight(1f),
-                                enabled = state.bet == null && amount != 0 && !(minutes == 0 && seconds == 0),
+                                enabled = state.bet == null && state.preparedAmount != 0 && !(minutes == 0 && seconds == 0),
                                 onPutClicked = {
                                     onAction(
                                         TrainingScreenAction.OnDownClicked(
                                             minutes,
                                             seconds,
-                                            amount
+                                            state.preparedAmount
                                         )
                                     )
                                 }

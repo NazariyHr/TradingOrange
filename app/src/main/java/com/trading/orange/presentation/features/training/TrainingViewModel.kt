@@ -14,9 +14,11 @@ import com.trading.orange.domain.use_case.rates.GetBetFlowUseCase
 import com.trading.orange.domain.use_case.rates.GetCoefficientFlowUseCase
 import com.trading.orange.domain.use_case.rates.GetInstrumentsFlowUseCase
 import com.trading.orange.domain.use_case.rates.GetLastNotSeenBetResultFlowUseCase
+import com.trading.orange.domain.use_case.rates.GetPreparedBetAmountFlowUseCase
 import com.trading.orange.domain.use_case.rates.GetRatesCandlesFlowUseCase
 import com.trading.orange.domain.use_case.rates.GetRatesFlowUseCase
 import com.trading.orange.domain.use_case.rates.SetBetResultsAsSeenUseCase
+import com.trading.orange.domain.use_case.rates.SetPreparedBetAmountUseCase
 import com.trading.orange.presentation.common.utils.formatBalance
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
@@ -41,7 +43,9 @@ class TrainingViewModel @Inject constructor(
     private val addBetUseCase: AddBetUseCase,
     getLastNotSeenBetResultFlowUseCase: GetLastNotSeenBetResultFlowUseCase,
     getAllBetResultsFlowUseCase: GetAllBetResultsFlowUseCase,
-    private val setBetResultsAsSeenUseCase: SetBetResultsAsSeenUseCase
+    private val setBetResultsAsSeenUseCase: SetBetResultsAsSeenUseCase,
+    getPreparedBetAmountFlowUseCase: GetPreparedBetAmountFlowUseCase,
+    private val setPreparedBetAmountUseCase: SetPreparedBetAmountUseCase
 ) : ViewModel() {
     companion object {
         const val STATE_KEY = "state"
@@ -147,6 +151,14 @@ class TrainingViewModel @Inject constructor(
                 )
             }
             .launchIn(viewModelScope)
+
+        getPreparedBetAmountFlowUseCase()
+            .onEach { preparedAmount ->
+                stateValue = stateValue.copy(
+                    preparedAmount = preparedAmount
+                )
+            }
+            .launchIn(viewModelScope)
     }
 
     fun onAction(action: TrainingScreenAction) {
@@ -212,6 +224,10 @@ class TrainingViewModel @Inject constructor(
 
             TrainingScreenAction.OnLastBetResultClicked -> {
                 setBetResultsAsSeenUseCase()
+            }
+
+            is TrainingScreenAction.OnNewPreparedAmountSelected -> {
+                setPreparedBetAmountUseCase(action.newPreparedAmount)
             }
         }
     }

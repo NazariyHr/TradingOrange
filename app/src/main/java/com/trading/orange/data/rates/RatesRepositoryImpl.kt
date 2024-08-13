@@ -4,14 +4,18 @@ import android.content.Context
 import android.util.Log
 import com.trading.orange.data.local_db.RatesDatabase
 import com.trading.orange.data.local_db.entity.RateEntity
+import com.trading.orange.data.local_db.entity.SignalEntity
 import com.trading.orange.data.local_db.entity.toRateData
 import com.trading.orange.data.local_db.entity.toRateEntity
+import com.trading.orange.data.local_db.entity.toSignal
 import com.trading.orange.data.server.ServerDataManager
 import com.trading.orange.domain.model.rates.Bet
 import com.trading.orange.domain.model.rates.BetResult
 import com.trading.orange.domain.model.rates.Instrument
 import com.trading.orange.domain.model.rates.InstrumentWithCurrentRate
 import com.trading.orange.domain.model.rates.RateData
+import com.trading.orange.domain.model.rates.Signal
+import com.trading.orange.domain.model.rates.SignalType
 import com.trading.orange.domain.model.rates.currencyInstruments
 import com.trading.orange.domain.model.rates.toInstrument
 import com.trading.orange.domain.repository.RatesRepository
@@ -44,15 +48,13 @@ class RatesRepositoryImpl(
     private val coefficientSimulator: CoefficientSimulator,
     private val serverDataManager: ServerDataManager,
     private val ratesDatabase: RatesDatabase,
-    private val betResultsManager: BetResultsManager
+    private val betResultsManager: BetResultsManager,
+    private val prepareBetAmountManager: PrepareBetAmountManager,
+    private val signalsManager: SignalsManager
 ) : RatesRepository {
 
     companion object {
         private const val TAG = "RatesRepositoryImpl"
-
-        private const val SIGNALS_PREFERENCES_NAME = "prefs_signals"
-//        private const val SIGNALS = "signals"
-//        private const val SIGNALS_GENERATE_TIME = "signals_generate_time"
     }
 
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
@@ -65,11 +67,6 @@ class RatesRepositoryImpl(
     private val betPreferences: MutableMap<String, BetsManager> = mutableMapOf()
     private val instruments = (currencyInstruments).map { it.toInstrument() }
     private val ratesDataHolders: MutableMap<String, ExchangeRatesDataHolder> = mutableMapOf()
-
-//    private val prefs by lazy {
-//        context.getSharedPreferences(SIGNALS_PREFERENCES_NAME, Context.MODE_PRIVATE)
-//    }
-    // private val signalsFlow = MutableSharedFlow<List<Signal>>(replay = 1)
 
     init {
         initSimulationsAndBets()
@@ -98,8 +95,7 @@ class RatesRepositoryImpl(
     }
 
     private fun startSimulation(
-        ratesUpdateInterval: Long = 1000L * 1/*,
-        signalsUpdateInterval: Long = 1000L * 60 * 60*/
+        ratesUpdateInterval: Long = 1000L * 1
     ) {
         scope.launch {
             Log.d(TAG, "Simulation started")
@@ -128,30 +124,7 @@ class RatesRepositoryImpl(
                 Log.d(TAG, "New rates generated, and saved. Rates count: ${ratesEntities.count()}")
             }
 
-//            val signalsInPrefs = getSignalsFromPrefs()
-//            signalsFlow.emit(signalsInPrefs)
-//            if (signalsInPrefs.isNotEmpty()) {
-//                Log.d(TAG, "Signals restored from prefs. Signals count: ${signalsInPrefs.count()}")
-//            }
-//
-//            val lastTime = getLastSignalsGenerateTimeFromPrefs()
-//            val currTime = Calendar.getInstance().timeInMillis
-//            val passedTime = currTime - lastTime
-//
-//            if (lastTime == 0L || passedTime >= signalsUpdateInterval) {
-//                Log.d(
-//                    TAG,
-//                    "Last signals update time was long ago, start to update signals without delay"
-//                )
-//                simulateSignalsChange(0L, signalsUpdateInterval)
-//            } else {
-//                val delay = signalsUpdateInterval - passedTime
-//                Log.d(
-//                    TAG,
-//                    "Last signals update was recently, initial delay is ${delay / 1000} seconds"
-//                )
-//                simulateSignalsChange(delay, signalsUpdateInterval)
-//            }
+            signalsSimulationLoop()
 
             simulateRatesChange(ratesUpdateInterval)
         }
@@ -247,86 +220,42 @@ class RatesRepositoryImpl(
         }
     }
 
+    private fun signalsSimulationLoop() {
+        scope.launch {
+            while (true) {
+                signalsManager.removeOutdatedSignals()
+                val activeSignals = signalsManager.getAllSignals()
+                if (activeSignals.count() < 10) {
+                    val newSignals =
+                        generateNewSignals(newSignalsAmount = 10 - activeSignals.count())
+                    signalsManager.addAllSignals(newSignals)
+                }
+                delay(1000L)
+            }
+        }
+    }
 
-//    private fun getSignalsFromPrefs(): List<Signal> {
-//        val signalsStr = prefs.getString(SIGNALS, "")
-//        if (signalsStr.isNullOrEmpty()) return emptyList()
-//        val type = object : TypeToken<List<Signal>>() {}.type
-//        return Gson().fromJson(signalsStr, type)
-//    }
-//
-//    private fun saveNewSignals(signals: List<Signal>) {
-//        val newSignalsStr = Gson().toJson(signals)
-//        prefs.edit { putString(SIGNALS, newSignalsStr) }
-//    }
-//
-//    private fun generateNewSignals(): List<Signal> {
-//        return ratesDataHolders.values.map {
-//            it.getLastRate().let { rateValue ->
-//                val buyLowPercent = Random.nextInt(300, 800).toFloat() / 10000f
-//                val buyHighPercent = Random.nextInt(300, 800).toFloat() / 10000f
-//
-//                val target1Percent = Random.nextInt(100, 300).toFloat() / 10000f
-//                val target2Percent = Random.nextInt(200, 400).toFloat() / 10000f
-//                val target3Percent = Random.nextInt(400, 800).toFloat() / 10000f
-//                var stopLossPercent = Random.nextInt(400, 1100).toFloat() / 10000f
-//
-//                if (buyLowPercent > stopLossPercent) {
-//                    stopLossPercent = buyLowPercent
-//                }
-//                Signal(
-//                    instrument = it.instrument,
-//                    currentAsk = rateValue,
-//                    buyStart = rateValue - (rateValue * buyLowPercent),
-//                    buyEnd = rateValue + (rateValue * buyHighPercent),
-//                    targets = listOf(
-//                        ValueWithPercent(
-//                            rateValue + (rateValue * target1Percent),
-//                            target1Percent
-//                        ),
-//                        ValueWithPercent(
-//                            rateValue + (rateValue * target2Percent),
-//                            target2Percent
-//                        ),
-//                        ValueWithPercent(
-//                            rateValue + (rateValue * target3Percent),
-//                            target3Percent
-//                        )
-//                    ),
-//                    stopLoss = ValueWithPercent(
-//                        rateValue - (rateValue * stopLossPercent),
-//                        stopLossPercent
-//                    )
-//                )
-//            }
-//        }
-//    }
-//
-//    private fun getLastSignalsGenerateTimeFromPrefs(): Long {
-//        return prefs.getLong(SIGNALS_GENERATE_TIME, 0L)
-//    }
-//
-//    private fun saveLastSignalsGenerateTime(time: Long) {
-//        prefs.edit { putLong(SIGNALS_GENERATE_TIME, time) }
-//    }
-//
-//    private fun simulateSignalsChange(startDelay: Long, intervalInMillis: Long) {
-//        scope.launch {
-//            delay(startDelay)
-//            while (true) {
-//                val signals = generateNewSignals()
-//                saveNewSignals(signals = signals)
-//                signalsFlow.emit(signals)
-//
-//                val newSignalsTime = Calendar.getInstance().timeInMillis
-//                saveLastSignalsGenerateTime(newSignalsTime)
-//
-//                Log.d(TAG, "New signals generated, and saved. Signals count: ${signals.count()}")
-//
-//                delay(intervalInMillis)
-//            }
-//        }
-//    }
+    private fun generateNewSignals(newSignalsAmount: Int): List<SignalEntity> {
+        val newSignals = mutableListOf<SignalEntity>()
+        repeat(newSignalsAmount) {
+            val exchangeRateHolder = ratesDataHolders.values.random()
+            val instrument = exchangeRateHolder.instrument
+            val startTime = Calendar.getInstance().timeInMillis
+            val timeSeconds = Random.nextInt(30, 60 * 5)
+
+            newSignals.add(
+                SignalEntity(
+                    id = 0,
+                    instrumentName = instrument.name,
+                    copies = Random.nextInt(10, 70),
+                    type = SignalType.entries[Random.nextInt(0, 4)].name,
+                    startTime = startTime,
+                    timeSeconds = timeSeconds
+                )
+            )
+        }
+        return newSignals
+    }
 
 
     override fun getRatesFlow(instrumentName: String): Flow<List<RateData>> =
@@ -396,5 +325,41 @@ class RatesRepositoryImpl(
         betResultsManager.setBetResultsAsSeen()
     }
 
-    //    override fun getInstrumentsSignalsFlow(): Flow<List<Signal>> = signalsFlow.asSharedFlow()
+    override fun getPreparedBetAmountFlow(): Flow<Int> =
+        prepareBetAmountManager.getPreparedBetAmountFlow()
+
+    override fun setNewPreparedBetAmount(preparedBetAmount: Int) {
+        prepareBetAmountManager.setNewPreparedBetAmount(preparedBetAmount)
+    }
+
+    override fun getSignalsListFlow(): Flow<List<Signal>> =
+        signalsManager.getAllSignalsFlow().flatMapLatest { signalsEntities ->
+            combine(
+                signalsEntities.map { signalsEntity ->
+                    combine(
+                        ratesDataHoldersFlow
+                            .asSharedFlow()
+                            .map { it[signalsEntity.instrumentName] }
+                            .filterNotNull()
+                            .flatMapLatest { it.getLastRateFlow() },
+                        prepareBetAmountManager.getPreparedBetAmountFlow(),
+                        getBetFlow(signalsEntity.instrumentName).map { bet -> bet == null }
+                    ) { currInstrumentRate, amountForBet, availableToBet ->
+                        signalsEntity.toSignal(
+                            currInstrumentRate,
+                            amountForBet,
+                            availableToBet
+                        )
+                    }
+                }
+            ) {
+                it.toList()
+            }
+        }
+
+    override fun incrementSignalCopies(signalId: Int) {
+        scope.launch {
+            signalsManager.incrementSignalCopies(signalId)
+        }
+    }
 }

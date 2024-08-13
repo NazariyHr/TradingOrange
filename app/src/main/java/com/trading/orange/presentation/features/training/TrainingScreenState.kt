@@ -13,6 +13,7 @@ import kotlinx.parcelize.Parcelize
 data class TrainingScreenState(
     val showType: ShowType = ShowType.CHART,
     val chartDrawType: ChartDrawType = ChartDrawType.CANDLES,
+    val preparedAmount: Int = 0,
     val balanceFormatted: String = "",
     val balance: Float = 0f,
     val coefficient: Float = 0f,

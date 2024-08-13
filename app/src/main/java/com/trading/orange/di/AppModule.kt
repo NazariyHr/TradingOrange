@@ -10,7 +10,9 @@ import com.trading.orange.data.local_assets.AssetsReader
 import com.trading.orange.data.local_db.RatesDatabase
 import com.trading.orange.data.rates.BetResultsManager
 import com.trading.orange.data.rates.CoefficientSimulator
+import com.trading.orange.data.rates.PrepareBetAmountManager
 import com.trading.orange.data.rates.RatesRepositoryImpl
+import com.trading.orange.data.rates.SignalsManager
 import com.trading.orange.data.server.ServerApi
 import com.trading.orange.data.server.ServerDataManager
 import com.trading.orange.domain.repository.ArticlesRepository
@@ -99,7 +101,6 @@ object AppModule {
         ).build()
     }
 
-
     @Provides
     @Singleton
     fun provideRatesRepository(
@@ -108,7 +109,9 @@ object AppModule {
         coefficientSimulator: CoefficientSimulator,
         serverDataManager: ServerDataManager,
         ratesDatabase: RatesDatabase,
-        betResultsManager: BetResultsManager
+        betResultsManager: BetResultsManager,
+        prepareBetAmountManager: PrepareBetAmountManager,
+        signalsManager: SignalsManager
     ): RatesRepository {
         return RatesRepositoryImpl(
             context,
@@ -116,7 +119,18 @@ object AppModule {
             coefficientSimulator,
             serverDataManager,
             ratesDatabase,
-            betResultsManager
+            betResultsManager,
+            prepareBetAmountManager,
+            signalsManager
+        )
+    }
+
+    @Provides
+    fun providePrepareBetAmountManager(
+        @ApplicationContext context: Context
+    ): PrepareBetAmountManager {
+        return PrepareBetAmountManager(
+            context
         )
     }
 }

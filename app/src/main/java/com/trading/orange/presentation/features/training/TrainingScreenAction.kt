@@ -15,4 +15,5 @@ sealed class TrainingScreenAction {
         TrainingScreenAction()
 
     data object OnLastBetResultClicked : TrainingScreenAction()
+    data class OnNewPreparedAmountSelected(val newPreparedAmount: Int) : TrainingScreenAction()
 }
