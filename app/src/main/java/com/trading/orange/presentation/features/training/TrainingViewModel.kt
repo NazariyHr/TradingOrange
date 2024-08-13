@@ -3,22 +3,39 @@ package com.trading.orange.presentation.features.training
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.trading.orange.domain.model.rates.Bet
+import com.trading.orange.domain.model.rates.BetType
 import com.trading.orange.domain.model.rates.Instrument
 import com.trading.orange.domain.use_case.balance.GetBalanceFlowUseCase
 import com.trading.orange.domain.use_case.balance.ResetBalanceUseCase
+import com.trading.orange.domain.use_case.rates.AddBetUseCase
+import com.trading.orange.domain.use_case.rates.GetBetFlowUseCase
+import com.trading.orange.domain.use_case.rates.GetCoefficientFlowUseCase
+import com.trading.orange.domain.use_case.rates.GetInstrumentsFlowUseCase
+import com.trading.orange.domain.use_case.rates.GetRatesCandlesFlowUseCase
+import com.trading.orange.domain.use_case.rates.GetRatesFlowUseCase
 import com.trading.orange.presentation.common.utils.formatBalance
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.filterNotNull
+import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+@Suppress("OPT_IN_USAGE")
 @HiltViewModel
 class TrainingViewModel @Inject constructor(
     private val savedStateHandle: SavedStateHandle,
     getBalanceFlowUseCase: GetBalanceFlowUseCase,
-    private val resetBalanceUseCase: ResetBalanceUseCase
+    private val resetBalanceUseCase: ResetBalanceUseCase,
+    getCoefficientFlowUseCase: GetCoefficientFlowUseCase,
+    getInstrumentsFlowUseCase: GetInstrumentsFlowUseCase,
+    getRatesCandlesFlowUseCase: GetRatesCandlesFlowUseCase,
+    getRatesFlowUseCase: GetRatesFlowUseCase,
+    getBetFlowUseCase: GetBetFlowUseCase,
+    private val addBetUseCase: AddBetUseCase
 ) : ViewModel() {
     companion object {
         const val STATE_KEY = "state"
@@ -44,6 +61,70 @@ class TrainingViewModel @Inject constructor(
                 )
             }
             .launchIn(viewModelScope)
+
+        getCoefficientFlowUseCase()
+            .onEach { newCoefficient ->
+                stateValue = stateValue.copy(
+                    formattedCoefficient = "+" + (newCoefficient * 100).toInt() + "%",
+                    coefficient = newCoefficient
+                )
+            }
+            .launchIn(viewModelScope)
+
+        getInstrumentsFlowUseCase()
+            .onEach { instruments ->
+                stateValue = stateValue.copy(
+                    instruments = instruments
+                )
+                if (stateValue.selectedInstrument == null) {
+                    selectedInstrument.emit(instruments.first())
+                }
+            }
+            .launchIn(viewModelScope)
+
+        selectedInstrument
+            .onEach { instrument ->
+                stateValue = stateValue.copy(
+                    selectedInstrument = instrument
+                )
+            }
+            .launchIn(viewModelScope)
+
+        selectedInstrument
+            .filterNotNull()
+            .flatMapLatest { instrument ->
+                getRatesCandlesFlowUseCase(instrument.name)
+            }
+            .onEach { candles ->
+                stateValue = stateValue.copy(
+                    candles = candles
+                )
+            }
+            .launchIn(viewModelScope)
+
+        selectedInstrument
+            .filterNotNull()
+            .flatMapLatest { instrument ->
+                getRatesFlowUseCase(instrument.name)
+            }
+            .onEach { rates ->
+                stateValue = stateValue.copy(
+                    rates = rates
+                )
+            }
+            .launchIn(viewModelScope)
+
+        selectedInstrument
+            .filterNotNull()
+            .flatMapLatest { instrument ->
+                getBetFlowUseCase(instrument.name)
+            }
+            .onEach { bet ->
+                stateValue = stateValue.copy(
+                    bet = bet
+                )
+            }
+            .launchIn(viewModelScope)
     }
 
     fun onAction(action: TrainingScreenAction) {
@@ -52,7 +133,8 @@ class TrainingViewModel @Inject constructor(
                 viewModelScope.launch {
                     selectedInstrument.emit(action.instrument)
                     stateValue = stateValue.copy(
-                        selectedInstrument = action.instrument
+                        selectedInstrument = action.instrument,
+                        showType = ShowType.CHART
                     )
                 }
             }
@@ -75,10 +157,35 @@ class TrainingViewModel @Inject constructor(
                 )
 
             is TrainingScreenAction.OnDownClicked -> {
-                // todo: implement bet logic
+                stateValue.selectedInstrument?.name?.let { instrumentName ->
+                    val lastCandle = stateValue.candles.last()
+                    addBetUseCase(
+                        instrumentName,
+                        Bet(
+                            lastCandle.endTime,
+                            lastCandle.endValue,
+                            action.minutes * 60 + action.seconds,
+                            action.amount,
+                            BetType.DOWN
+                        )
+                    )
+                }
             }
+
             is TrainingScreenAction.OnUpClicked -> {
-                // todo: implement bet logic
+                stateValue.selectedInstrument?.name?.let { instrumentName ->
+                    val lastCandle = stateValue.candles.last()
+                    addBetUseCase(
+                        instrumentName,
+                        Bet(
+                            lastCandle.endTime,
+                            lastCandle.endValue,
+                            action.minutes * 60 + action.seconds,
+                            action.amount,
+                            BetType.UP
+                        )
+                    )
+                }
             }
         }
     }

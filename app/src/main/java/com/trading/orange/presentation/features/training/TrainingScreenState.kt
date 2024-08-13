@@ -3,7 +3,9 @@ package com.trading.orange.presentation.features.training
 import android.os.Parcelable
 import com.trading.orange.domain.model.rates.Bet
 import com.trading.orange.domain.model.rates.BetResult
+import com.trading.orange.domain.model.rates.CandleStick
 import com.trading.orange.domain.model.rates.Instrument
+import com.trading.orange.domain.model.rates.RateData
 import com.trading.orange.presentation.features.training.components.chart.ChartDrawType
 import kotlinx.parcelize.Parcelize
 
@@ -18,7 +20,9 @@ data class TrainingScreenState(
     val instruments: List<Instrument> = emptyList(),
     val selectedInstrument: Instrument? = null,
     val betResults: List<BetResult> = emptyList(),
-    val bet: Bet? = null
+    val bet: Bet? = null,
+    val candles: List<CandleStick> = listOf(),
+    val rates: List<RateData> = listOf()
 ) : Parcelable
 
 enum class ShowType {

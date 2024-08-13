@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -48,7 +49,10 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
 import com.trading.orange.R
+import com.trading.orange.domain.model.rates.Bet
 import com.trading.orange.domain.model.rates.BetResult
+import com.trading.orange.domain.model.rates.BetType
+import com.trading.orange.domain.model.rates.CandleStick
 import com.trading.orange.domain.model.rates.toInstrument
 import com.trading.orange.presentation.common.components.MainScreensLayout
 import com.trading.orange.presentation.common.modifiers.safeSingleClick
@@ -64,7 +68,9 @@ import com.trading.orange.presentation.features.training.components.AssetItem
 import com.trading.orange.presentation.features.training.components.DownButton
 import com.trading.orange.presentation.features.training.components.TradeHistoryItem
 import com.trading.orange.presentation.features.training.components.UpButton
+import com.trading.orange.presentation.features.training.components.chart.CandleChart
 import com.trading.orange.presentation.features.training.components.chart.ChartDrawType
+import com.trading.orange.presentation.features.training.components.chart.LinearChart
 import java.util.Calendar
 import java.util.Locale
 import kotlin.random.Random
@@ -121,6 +127,9 @@ private fun TrainingScreen(
     var timeOptionsDividerHeight by remember {
         mutableStateOf(0.dp)
     }
+    var timeAndAmoutHeight by remember {
+        mutableStateOf(0.dp)
+    }
 
     var amount by rememberSaveable {
         mutableIntStateOf(0)
@@ -140,6 +149,10 @@ private fun TrainingScreen(
                 (amount.toFloat() + amount.toFloat() * state.coefficient)
             )
         }
+    }
+
+    var chartVisibleDiapasonCount by remember {
+        mutableStateOf(0)
     }
 
     MainScreensLayout(
@@ -331,9 +344,29 @@ private fun TrainingScreen(
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                //.background(ColorLightGray)
+                                    .padding(bottom = timeAndAmoutHeight)
                             ) {
-                                Text(text = "Chart", modifier = Modifier.align(Alignment.Center))
+                                when (state.chartDrawType) {
+                                    ChartDrawType.CANDLES -> {
+                                        CandleChart(
+                                            modifier = Modifier.fillMaxHeight(),
+                                            candles = state.candles,
+                                            bet = state.bet,
+                                            onNewVisibleDiapasonCount = { count ->
+                                                chartVisibleDiapasonCount = count
+                                            }
+                                        )
+                                    }
+
+                                    ChartDrawType.LINEAR -> {
+                                        LinearChart(
+                                            modifier = Modifier.fillMaxHeight(),
+                                            rates = state.rates,
+                                            bet = state.bet,
+                                            chartVisibleDiapasonCount = chartVisibleDiapasonCount
+                                        )
+                                    }
+                                }
                             }
 
 
@@ -493,6 +526,9 @@ private fun TrainingScreen(
                                     // Selected time
                                     Row(
                                         modifier = Modifier
+                                            .onPlaced {
+                                                timeAndAmoutHeight = with(d){it.size.height.toDp()}
+                                            }
                                             .fillMaxWidth()
                                             .clip(RoundedCornerShape(8.dp))
                                             .background(color = LightBlue)
@@ -831,13 +867,63 @@ private fun TrainingScreen(
 @Preview
 @Composable
 private fun TrainingScreenChartPreview() {
+    val instruments = listOf(
+        "GBP", "EUR", "JPY", "CHF", "AUD", "NZD", "RUB"
+    ).map { it.toInstrument() }
+
     TradingOrangeTheme {
         TrainingScreen(
             state = TrainingScreenState(
                 balanceFormatted = "44.826,12 $",
                 showType = ShowType.CHART,
+                instruments = instruments,
                 selectedInstrument = "EUR".toInstrument(),
-                formattedCoefficient = "+80%"
+                formattedCoefficient = "+80%",
+                candles = listOf(
+                    CandleStick(
+                        maxValue = 14.808f,
+                        minValue = 7.404f,
+                        startValue = 8f,
+                        endValue = 9f,
+                        startTime = 0L,
+                        endTime = 0L,
+                        1
+                    ),
+                    CandleStick(
+                        maxValue = 0.492f,
+                        minValue = 0.246f,
+                        startValue = 0.30f,
+                        endValue = 0.40f,
+                        startTime = 0L,
+                        endTime = 0L,
+                        1
+                    ),
+                    CandleStick(
+                        maxValue = 0.084f,
+                        minValue = 0.042f,
+                        startValue = 0.048f,
+                        endValue = 0.056f,
+                        startTime = 0L,
+                        endTime = 0L,
+                        1
+                    ),
+                    CandleStick(
+                        maxValue = 3.972f,
+                        minValue = 1.986f,
+                        startValue = 2f,
+                        endValue = 3.1f,
+                        startTime = Calendar.getInstance().timeInMillis - 40 * 1000,
+                        endTime = Calendar.getInstance().timeInMillis,
+                        1
+                    ),
+                ),
+                bet = Bet(
+                    startTime = Calendar.getInstance().timeInMillis - 30 * 1000,
+                    rateOnStart = 3.6f,
+                    timeSeconds = 120,
+                    amount = 10,
+                    type = BetType.UP
+                )
             ),
             onAction = {}
         )

@@ -1,5 +1,6 @@
 package com.trading.orange.data.server
 
+import com.trading.orange.data.server.dto.ExchangeRateDto
 import com.trading.orange.data.server.dto.NewsArticleDto
 import retrofit2.http.GET
 import retrofit2.http.Query
@@ -26,4 +27,10 @@ interface ServerApi {
         @Query("mode") type: String = "news",
         @Query("key") key: String = DEBUG_KEY
     ): List<NewsArticleDto>
+
+    @GET("3490/")
+    suspend fun getExchangeRates(
+        @Query("mode") type: String = "currency",
+        @Query("key") key: String = DEBUG_KEY
+    ): List<ExchangeRateDto>
 }

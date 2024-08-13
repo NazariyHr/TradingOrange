@@ -1,15 +1,20 @@
 package com.trading.orange.di
 
 import android.content.Context
+import androidx.room.Room
 import com.trading.orange.data.ArticlesRepositoryImpl
 import com.trading.orange.data.NewsRepositoryImpl
 import com.trading.orange.data.UserBalanceRepositoryImpl
 import com.trading.orange.data.appwrite.AppWriteStorage
 import com.trading.orange.data.local_assets.AssetsReader
+import com.trading.orange.data.local_db.RatesDatabase
+import com.trading.orange.data.rates.CoefficientSimulator
+import com.trading.orange.data.rates.RatesRepositoryImpl
 import com.trading.orange.data.server.ServerApi
 import com.trading.orange.data.server.ServerDataManager
 import com.trading.orange.domain.repository.ArticlesRepository
 import com.trading.orange.domain.repository.NewsRepository
+import com.trading.orange.domain.repository.RatesRepository
 import com.trading.orange.domain.repository.UserBalanceRepository
 import dagger.Module
 import dagger.Provides
@@ -79,5 +84,36 @@ object AppModule {
         @ApplicationContext context: Context
     ): UserBalanceRepository {
         return UserBalanceRepositoryImpl(context)
+    }
+
+    @Provides
+    @Singleton
+    fun provideRatesDatabase(
+        @ApplicationContext context: Context
+    ): RatesDatabase {
+        return Room.databaseBuilder(
+            context,
+            RatesDatabase::class.java,
+            "exchange_rates.db"
+        ).build()
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideRatesRepository(
+        @ApplicationContext context: Context,
+        userRepository: UserBalanceRepository,
+        coefficientSimulator: CoefficientSimulator,
+        serverDataManager: ServerDataManager,
+        ratesDatabase: RatesDatabase
+    ): RatesRepository {
+        return RatesRepositoryImpl(
+            context,
+            userRepository,
+            coefficientSimulator,
+            serverDataManager,
+            ratesDatabase
+        )
     }
 }

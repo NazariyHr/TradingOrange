@@ -13,5 +13,5 @@ data class Bet(
 ) : Parcelable
 
 enum class BetType {
-    CALL, PUT
+    UP, DOWN
 }
