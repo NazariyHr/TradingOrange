@@ -36,7 +36,5 @@ class ExchangeRatesDataHolder(
     fun getLastRateFlow(): Flow<Float> =
         lastRateFlow.map { it.rateValue }
 
-    fun getLastRate(): Float = ratesDatabase.rateDao.getLastByName(instrument.name)?.rateValue ?: 0f
-
     fun getPreviousRateFlow(): Flow<Float> = previousRateFlow.map { it.rateValue }
 }

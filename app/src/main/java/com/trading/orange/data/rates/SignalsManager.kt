@@ -13,8 +13,6 @@ import javax.inject.Inject
 class SignalsManager @Inject constructor(
     private val ratesDatabase: RatesDatabase
 ) {
-    private val scope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
-
     fun getAllSignalsFlow(): Flow<List<SignalEntity>> =
         ratesDatabase.signalDao
             .getAllFlow()

@@ -95,7 +95,7 @@ class RatesRepositoryImpl(
     }
 
     private fun startSimulation(
-        ratesUpdateInterval: Long = 1000L * 1
+        ratesUpdateInterval: Long = 1000L * 5
     ) {
         scope.launch {
             Log.d(TAG, "Simulation started")

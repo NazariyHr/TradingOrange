@@ -15,9 +15,6 @@ interface BetResultDao {
     suspend fun insertAll(betResults: List<BetResultEntity>)
 
     @Query("select * from betresultentity ORDER BY time desc")
-    suspend fun getAll(): List<BetResultEntity>
-
-    @Query("select * from betresultentity ORDER BY time desc")
     fun getAllFlow(): Flow<List<BetResultEntity>>
 
     @Query("select * from betresultentity where seen = 0 ORDER BY time desc limit 1")
