@@ -3,9 +3,9 @@ package com.trading.orange.presentation.features.discover
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.trading.orange.domain.use_case.GetNewsUseCase
-import com.trading.orange.domain.use_case.GetQuickReadsUseCase
-import com.trading.orange.domain.use_case.GetStrategiesUseCase
+import com.trading.orange.domain.use_case.news.GetNewsUseCase
+import com.trading.orange.domain.use_case.articles.GetQuickReadsUseCase
+import com.trading.orange.domain.use_case.articles.GetStrategiesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

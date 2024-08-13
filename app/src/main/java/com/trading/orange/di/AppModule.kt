@@ -3,12 +3,14 @@ package com.trading.orange.di
 import android.content.Context
 import com.trading.orange.data.ArticlesRepositoryImpl
 import com.trading.orange.data.NewsRepositoryImpl
+import com.trading.orange.data.UserBalanceRepositoryImpl
 import com.trading.orange.data.appwrite.AppWriteStorage
 import com.trading.orange.data.local_assets.AssetsReader
 import com.trading.orange.data.server.ServerApi
 import com.trading.orange.data.server.ServerDataManager
 import com.trading.orange.domain.repository.ArticlesRepository
 import com.trading.orange.domain.repository.NewsRepository
+import com.trading.orange.domain.repository.UserBalanceRepository
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -68,5 +70,14 @@ object AppModule {
         appWriteStorage: AppWriteStorage
     ): ArticlesRepository {
         return ArticlesRepositoryImpl(assetsReader, appWriteStorage)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideUserBalanceRepository(
+        @ApplicationContext context: Context
+    ): UserBalanceRepository {
+        return UserBalanceRepositoryImpl(context)
     }
 }

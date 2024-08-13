@@ -3,7 +3,7 @@ package com.trading.orange.presentation.features.news_list
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.trading.orange.domain.use_case.GetNewsUseCase
+import com.trading.orange.domain.use_case.news.GetNewsUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

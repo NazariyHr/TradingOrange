@@ -3,7 +3,7 @@ package com.trading.orange.presentation.features.strategy_details
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.trading.orange.domain.use_case.GetStrategyByIdUseCase
+import com.trading.orange.domain.use_case.articles.GetStrategyByIdUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.filterNotNull

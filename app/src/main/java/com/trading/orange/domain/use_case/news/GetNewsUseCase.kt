@@ -1,4 +1,4 @@
-package com.trading.orange.domain.use_case
+package com.trading.orange.domain.use_case.news
 
 import com.trading.orange.domain.model.NewsArticle
 import com.trading.orange.domain.repository.NewsRepository
