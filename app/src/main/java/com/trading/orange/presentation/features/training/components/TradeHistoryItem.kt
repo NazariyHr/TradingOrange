@@ -57,7 +57,7 @@ fun TradeHistoryItem(
                     modifier = Modifier.size(24.dp)
                 )
                 Text(
-                    text = betResult.result.formatResult(),
+                    text = betResult.betAmount.formatResult(),
                     style = DefaultTextStyle.copy(
                         fontSize = 16.sp,
                         fontFamily = FontFamilyAvenirRegular
@@ -96,7 +96,8 @@ private fun TradeHistoryItemWinPreview() {
     TradeHistoryItem(
         betResult = BetResult(
             instrument = "JPY".toInstrument(),
-            result = 10f,
+            betAmount = 10f,
+            result = 17f,
             time = Calendar.getInstance().timeInMillis
         )
     )
@@ -108,7 +109,8 @@ private fun TradeHistoryItemLoosePreview() {
     TradeHistoryItem(
         betResult = BetResult(
             instrument = "JPY".toInstrument(),
-            result = -45.37f,
+            betAmount = 10f,
+            result = -10f,
             time = Calendar.getInstance().timeInMillis
         )
     )

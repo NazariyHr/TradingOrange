@@ -8,6 +8,7 @@ import com.trading.orange.data.local_db.entity.toRateData
 import com.trading.orange.data.local_db.entity.toRateEntity
 import com.trading.orange.data.server.ServerDataManager
 import com.trading.orange.domain.model.rates.Bet
+import com.trading.orange.domain.model.rates.BetResult
 import com.trading.orange.domain.model.rates.Instrument
 import com.trading.orange.domain.model.rates.InstrumentWithCurrentRate
 import com.trading.orange.domain.model.rates.RateData
@@ -42,7 +43,8 @@ class RatesRepositoryImpl(
     private val userRepository: UserBalanceRepository,
     private val coefficientSimulator: CoefficientSimulator,
     private val serverDataManager: ServerDataManager,
-    private val ratesDatabase: RatesDatabase
+    private val ratesDatabase: RatesDatabase,
+    private val betResultsManager: BetResultsManager
 ) : RatesRepository {
 
     companion object {
@@ -67,7 +69,7 @@ class RatesRepositoryImpl(
 //    private val prefs by lazy {
 //        context.getSharedPreferences(SIGNALS_PREFERENCES_NAME, Context.MODE_PRIVATE)
 //    }
-   // private val signalsFlow = MutableSharedFlow<List<Signal>>(replay = 1)
+    // private val signalsFlow = MutableSharedFlow<List<Signal>>(replay = 1)
 
     init {
         initSimulationsAndBets()
@@ -86,6 +88,7 @@ class RatesRepositoryImpl(
                     coefficientSimulator = coefficientSimulator,
                     exchangeRatesDataHolder = ratesDataHolder,
                     userRepository = userRepository,
+                    betResultsManager = betResultsManager,
                     context = context
                 )
             }
@@ -95,7 +98,7 @@ class RatesRepositoryImpl(
     }
 
     private fun startSimulation(
-        ratesUpdateInterval: Long = 1000L * 5/*,
+        ratesUpdateInterval: Long = 1000L * 1/*,
         signalsUpdateInterval: Long = 1000L * 60 * 60*/
     ) {
         scope.launch {
@@ -383,5 +386,15 @@ class RatesRepositoryImpl(
                 }
             }
 
-//    override fun getInstrumentsSignalsFlow(): Flow<List<Signal>> = signalsFlow.asSharedFlow()
+    override fun getAllBetResultsFlow(): Flow<List<BetResult>> =
+        betResultsManager.getAllBetResultsFlow()
+
+    override fun getLastBetResultFlow(): Flow<BetResult?> =
+        betResultsManager.getLastNotSeenBetResultFlow()
+
+    override fun setBetResultsAsSeen() {
+        betResultsManager.setBetResultsAsSeen()
+    }
+
+    //    override fun getInstrumentsSignalsFlow(): Flow<List<Signal>> = signalsFlow.asSharedFlow()
 }

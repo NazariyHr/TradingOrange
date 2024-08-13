@@ -5,6 +5,7 @@ import androidx.core.content.edit
 import com.google.gson.Gson
 import com.trading.orange.domain.model.rates.Bet
 import com.trading.orange.domain.model.rates.BetType
+import com.trading.orange.domain.model.rates.toInstrument
 import com.trading.orange.domain.repository.UserBalanceRepository
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -22,6 +23,7 @@ class BetsManager(
     private val exchangeRatesDataHolder: ExchangeRatesDataHolder,
     private val coefficientSimulator: CoefficientSimulator,
     private val userRepository: UserBalanceRepository,
+    private val betResultsManager: BetResultsManager,
     context: Context
 ) {
     companion object {
@@ -97,7 +99,7 @@ class BetsManager(
             }.rateValue
             val betAmount = bet.amount.toFloat()
 
-            val betResult = when (bet.type) {
+            val wins = when (bet.type) {
                 BetType.UP -> if (endRate >= startRate) {
                     betAmount + betAmount * coefficient
                 } else {
@@ -111,8 +113,16 @@ class BetsManager(
                 }
             }
 
+            val betResult = if (wins == 0f) -bet.amount.toFloat() else wins
+
+            betResultsManager.addNewBetResult(
+                instrument = instrumentName.toInstrument(),
+                betAmount = bet.amount.toFloat(),
+                result = betResult,
+                time = endTime
+            )
             clearBet()
-            userRepository.addToBalance(betResult)
+            userRepository.addToBalance(wins)
         }
     }
 }

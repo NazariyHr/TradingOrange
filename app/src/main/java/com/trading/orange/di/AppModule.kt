@@ -8,6 +8,7 @@ import com.trading.orange.data.UserBalanceRepositoryImpl
 import com.trading.orange.data.appwrite.AppWriteStorage
 import com.trading.orange.data.local_assets.AssetsReader
 import com.trading.orange.data.local_db.RatesDatabase
+import com.trading.orange.data.rates.BetResultsManager
 import com.trading.orange.data.rates.CoefficientSimulator
 import com.trading.orange.data.rates.RatesRepositoryImpl
 import com.trading.orange.data.server.ServerApi
@@ -106,14 +107,16 @@ object AppModule {
         userRepository: UserBalanceRepository,
         coefficientSimulator: CoefficientSimulator,
         serverDataManager: ServerDataManager,
-        ratesDatabase: RatesDatabase
+        ratesDatabase: RatesDatabase,
+        betResultsManager: BetResultsManager
     ): RatesRepository {
         return RatesRepositoryImpl(
             context,
             userRepository,
             coefficientSimulator,
             serverDataManager,
-            ratesDatabase
+            ratesDatabase,
+            betResultsManager
         )
     }
 }

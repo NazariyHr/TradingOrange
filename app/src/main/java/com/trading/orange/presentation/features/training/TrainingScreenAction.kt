@@ -8,6 +8,11 @@ sealed class TrainingScreenAction {
     data class OnShowTypeChange(val showType: ShowType) : TrainingScreenAction()
     data class OnInstrumentSelected(val instrument: Instrument) : TrainingScreenAction()
     data class OnChartDrawTypeChange(val chartDrawType: ChartDrawType) : TrainingScreenAction()
-    data class OnUpClicked(val minutes: Int, val seconds: Int, val amount: Int) : TrainingScreenAction()
-    data class OnDownClicked(val minutes: Int, val seconds: Int, val amount: Int) : TrainingScreenAction()
+    data class OnUpClicked(val minutes: Int, val seconds: Int, val amount: Int) :
+        TrainingScreenAction()
+
+    data class OnDownClicked(val minutes: Int, val seconds: Int, val amount: Int) :
+        TrainingScreenAction()
+
+    data object OnLastBetResultClicked : TrainingScreenAction()
 }

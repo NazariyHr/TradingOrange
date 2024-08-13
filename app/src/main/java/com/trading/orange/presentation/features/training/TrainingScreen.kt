@@ -65,6 +65,8 @@ import com.trading.orange.presentation.common.theme.FontFamilyAvenirRegular
 import com.trading.orange.presentation.common.theme.LightBlue
 import com.trading.orange.presentation.common.theme.TradingOrangeTheme
 import com.trading.orange.presentation.features.training.components.AssetItem
+import com.trading.orange.presentation.features.training.components.BetResultItem
+import com.trading.orange.presentation.features.training.components.BetTimerItem
 import com.trading.orange.presentation.features.training.components.DownButton
 import com.trading.orange.presentation.features.training.components.TradeHistoryItem
 import com.trading.orange.presentation.features.training.components.UpButton
@@ -367,6 +369,43 @@ private fun TrainingScreen(
                                         )
                                     }
                                 }
+
+                                androidx.compose.animation.AnimatedVisibility(
+                                    visible = state.bet != null,
+                                    modifier = Modifier
+                                        .align(Alignment.BottomStart)
+                                        .padding(
+                                            start = 16.dp,
+                                            bottom = 12.dp
+                                        )
+                                ) {
+                                    state.bet?.let { bet ->
+                                        BetTimerItem(
+                                            startTime = bet.startTime,
+                                            endTime = bet.startTime + bet.timeSeconds * 1000L
+                                        )
+                                    }
+                                }
+
+                                androidx.compose.animation.AnimatedVisibility(
+                                    visible = state.lastBetResult != null,
+                                    modifier = Modifier
+                                        .align(Alignment.BottomEnd)
+                                        .padding(
+                                            end = 16.dp,
+                                            bottom = 24.dp
+                                        )
+                                ) {
+                                    state.lastBetResult?.let { betResult ->
+                                        BetResultItem(
+                                            betResult = betResult,
+                                            modifier = Modifier
+                                                .clickable {
+                                                    onAction(TrainingScreenAction.OnLastBetResultClicked)
+                                                }
+                                        )
+                                    }
+                                }
                             }
 
 
@@ -527,7 +566,8 @@ private fun TrainingScreen(
                                     Row(
                                         modifier = Modifier
                                             .onPlaced {
-                                                timeAndAmoutHeight = with(d){it.size.height.toDp()}
+                                                timeAndAmoutHeight =
+                                                    with(d) { it.size.height.toDp() }
                                             }
                                             .fillMaxWidth()
                                             .clip(RoundedCornerShape(8.dp))
@@ -923,6 +963,12 @@ private fun TrainingScreenChartPreview() {
                     timeSeconds = 120,
                     amount = 10,
                     type = BetType.UP
+                ),
+                lastBetResult = BetResult(
+                    instrument = "EUR".toInstrument(),
+                    betAmount = 50f,
+                    result = 75f,
+                    time = Calendar.getInstance().timeInMillis
                 )
             ),
             onAction = {}
@@ -958,11 +1004,13 @@ private fun TrainingScreenBetHistoryPreview() {
         "GBP", "EUR", "JPY", "CHF", "AUD", "NZD", "RUB"
     ).map { it.toInstrument() }
     repeat(6) {
+        val amount = betResults.count().toFloat() * 2.4f
+        val win = Random.nextBoolean()
         betResults.add(
             BetResult(
                 instrument = instruments.random(),
-                result = if (Random.nextBoolean()) betResults.count()
-                    .toFloat() * 2.4f else 0 - betResults.count().toFloat() * 2.4f,
+                betAmount = amount,
+                result = if (win) amount else 0 - amount,
                 time = Calendar.getInstance().timeInMillis
             )
         )

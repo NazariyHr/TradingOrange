@@ -19,10 +19,11 @@ data class TrainingScreenState(
     val formattedCoefficient: String = "",
     val instruments: List<Instrument> = emptyList(),
     val selectedInstrument: Instrument? = null,
-    val betResults: List<BetResult> = emptyList(),
     val bet: Bet? = null,
     val candles: List<CandleStick> = listOf(),
-    val rates: List<RateData> = listOf()
+    val rates: List<RateData> = listOf(),
+    val lastBetResult: BetResult? = null,
+    val betResults: List<BetResult> = emptyList()
 ) : Parcelable
 
 enum class ShowType {
