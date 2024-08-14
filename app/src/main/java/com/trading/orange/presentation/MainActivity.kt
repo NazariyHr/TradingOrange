@@ -9,12 +9,12 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.trading.orange.presentation.common.theme.MainBgColor
 import com.trading.orange.presentation.common.theme.TradingOrangeTheme
+import com.trading.orange.presentation.navigation.AppNavigationRoot
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -50,10 +50,7 @@ class MainActivity : ComponentActivity() {
 
 @Composable
 fun Content(modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello!",
-        modifier = modifier
-    )
+    AppNavigationRoot(modifier = modifier)
 }
 
 @Preview(showBackground = true)
