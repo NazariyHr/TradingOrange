@@ -13,9 +13,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.trading.orange.R
 import com.trading.orange.presentation.common.theme.ColorGreen
 import com.trading.orange.presentation.common.theme.DefaultTextStyle
 import com.trading.orange.presentation.common.theme.TradingOrangeTheme
@@ -52,7 +54,7 @@ fun UpButton(
             contentAlignment = Alignment.Center,
         ) {
             Text(
-                text = "UP",
+                text = stringResource(id = R.string.up),
                 style = DefaultTextStyle.copy(
                     fontSize = 14.sp
                 )

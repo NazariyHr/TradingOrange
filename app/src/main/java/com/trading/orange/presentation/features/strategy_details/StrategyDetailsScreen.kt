@@ -21,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -109,7 +110,7 @@ private fun StrategyDetailsScreen(
                             modifier = Modifier.padding(top = 16.dp)
                         ) {
                             Text(
-                                text = "Type of strategy",
+                                text = stringResource(id = R.string.type_of_strategy),
                                 style = DefaultTextStyle.copy(
                                     color = ColorLightGray,
                                     fontFamily = FontFamilyAvenirRegular,
@@ -130,7 +131,7 @@ private fun StrategyDetailsScreen(
                             modifier = Modifier.padding(top = 8.dp)
                         ) {
                             Text(
-                                text = "Timeframe",
+                                text = stringResource(id = R.string.timeframe),
                                 style = DefaultTextStyle.copy(
                                     color = ColorLightGray,
                                     fontFamily = FontFamilyAvenirRegular,
@@ -151,7 +152,7 @@ private fun StrategyDetailsScreen(
                             modifier = Modifier.padding(top = 8.dp)
                         ) {
                             Text(
-                                text = "Assets to trade",
+                                text = stringResource(id = R.string.assets_to_trade),
                                 style = DefaultTextStyle.copy(
                                     color = ColorLightGray,
                                     fontFamily = FontFamilyAvenirRegular,

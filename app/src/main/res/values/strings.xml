@@ -1,4 +1,31 @@
 <resources>
     <string name="app_name">TradingOrange</string>
-    <string name="email">test@gmail.com</string>
+    <string name="email" translatable="false">test@gmail.com</string>
+    <string name="contact_us_title">Contact us!</string>
+    <string name="contact_us_text">Get in touch by email %1$s</string>
+    <string name="write_to_email">Write to email</string>
+    <string name="bottom_nav_menu_discover">Discover</string>
+    <string name="bottom_nav_menu_training">Training</string>
+    <string name="bottom_nav_menu_signals">Signals</string>
+    <string name="bottom_nav_menu_contact_us">Contact us</string>
+    <string name="signals">Signals</string>
+    <string name="copy_signal">Copy signal</string>
+    <string name="copied_times">Copied: %1$d times</string>
+    <string name="up">UP</string>
+    <string name="down">DOWN</string>
+    <string name="earings">Earnings</string>
+    <string name="time">Time</string>
+    <string name="amount">Amount</string>
+    <string name="practice_balance">Practice Balance</string>
+    <string name="assets">Assets</string>
+    <string name="seconds">%1$d sec</string>
+    <string name="minutes">%1$d min</string>
+    <string name="trade_history">Trade history</string>
+    <string name="news">News</string>
+    <string name="strategies">Strategies</string>
+    <string name="quick_reads">Quick Reads</string>
+    <string name="see_all">See all</string>
+    <string name="type_of_strategy">Type of strategy</string>
+    <string name="timeframe">Timeframe</string>
+    <string name="assets_to_trade">Assets to trade</string>
 </resources>

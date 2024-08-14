@@ -32,7 +32,7 @@ fun BottomNavigationBar(
         navigationBarItems.forEachIndexed { index, item ->
             NavBarItem(
                 icon = item.icon,
-                title = item.title,
+                titleId = item.titleId,
                 isSelected = selectedItemIndex == index,
                 modifier = Modifier
                     .weight(1f)

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TradingOrange</string>
+    <string name="contact_us_title">Связаться с нами!</string>
+    <string name="contact_us_text">В случае вопросов обращайтесь по имейл %1$s</string>
+    <string name="write_to_email">Написать нам на почту</string>
+    <string name="bottom_nav_menu_discover">Обнаружить</string>
+    <string name="bottom_nav_menu_training">Обучение</string>
+    <string name="bottom_nav_menu_signals">Сигналы</string>
+    <string name="bottom_nav_menu_contact_us">Связаться с нами</string>
+    <string name="signals">Сигналы</string>
+    <string name="copy_signal">Копировать сигнал</string>
+    <string name="copied_times">Скопирован: %1$d раз</string>
+    <string name="up">ВВЕРХ</string>
+    <string name="down">ВНИЗ</string>
+    <string name="earings">Доход</string>
+    <string name="time">Время</string>
+    <string name="amount">Количество</string>
+    <string name="practice_balance">Практикуйте баланс</string>
+    <string name="assets">Ресурсы</string>
+    <string name="seconds">%1$d сек</string>
+    <string name="minutes">%1$d мин</string>
+    <string name="trade_history">История торговли</string>
+    <string name="news">Новости</string>
+    <string name="strategies">Стратегии</string>
+    <string name="quick_reads">Быстрое чтение</string>
+    <string name="see_all">Смотреть все</string>
+    <string name="type_of_strategy">Тип стратегии</string>
+    <string name="timeframe">Временные рамки</string>
+    <string name="assets_to_trade">Активы для торговли</string>
+</resources>

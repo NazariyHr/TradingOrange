@@ -28,9 +28,11 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.trading.orange.R
 import com.trading.orange.domain.model.rates.Signal
 import com.trading.orange.domain.model.rates.SignalType
 import com.trading.orange.domain.model.rates.toInstrument
@@ -111,7 +113,7 @@ fun SignalItem(
                 modifier = Modifier.padding(top = 4.dp)
             )
             Text(
-                text = "Скопирован: ${signal.copies} раз",
+                text = stringResource(id = R.string.copied_times, signal.copies),
                 style = DefaultTextStyle.copy(
                     fontSize = 12.sp,
                     color = ColorLightGray
@@ -193,7 +195,7 @@ fun SignalItem(
                 contentAlignment = Alignment.Center
             ) {
                 Text(
-                    text = "Копировать сигнал",
+                    text = stringResource(id = R.string.copy_signal),
                     style = DefaultTextStyle.copy(
                         fontSize = 14.sp
                     )

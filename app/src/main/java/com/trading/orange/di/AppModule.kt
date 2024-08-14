@@ -47,7 +47,6 @@ object AppModule {
     }
 
     @Provides
-    @Singleton
     fun provideAssetsReader(
         @ApplicationContext context: Context
     ): AssetsReader {
@@ -72,7 +71,6 @@ object AppModule {
     }
 
     @Provides
-    @Singleton
     fun provideArticlesRepository(
         assetsReader: AssetsReader,
         appWriteStorage: AppWriteStorage

@@ -22,31 +22,6 @@ class AppWriteStorage {
 
     private val storage = Storage(client)
 
-    suspend fun getRandomImages(neededImagesCount: Int): List<ByteArray> {
-        val bucketId = getNewsImagesBucketId() ?: return emptyList()
-
-        val allImagesIdsList = storage.listFiles(bucketId).files.map { it.id }
-        val imagesCountToReturn =
-            if (allImagesIdsList.count() < neededImagesCount) allImagesIdsList.count() else neededImagesCount
-
-        val filesIdsToFetch = mutableListOf<String>()
-        repeat(imagesCountToReturn) {
-            allImagesIdsList
-                .filterNot { filesIdsToFetch.contains(it) }
-                .let {
-                    filesIdsToFetch.add(it.random())
-                }
-        }
-
-        return filesIdsToFetch
-            .map { fileId ->
-                storage.getFileView(
-                    bucketId = bucketId,
-                    fileId = fileId
-                )
-            }
-    }
-
     suspend fun getRandomImageFileIds(neededImagesCount: Int): List<String> {
         val bucketId = getNewsImagesBucketId() ?: return emptyList()
 

@@ -10,12 +10,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.trading.orange.R
 import com.trading.orange.domain.model.rates.Signal
 import com.trading.orange.domain.model.rates.SignalType
 import com.trading.orange.domain.model.rates.toInstrument
@@ -52,7 +54,7 @@ private fun SignalsScreen(
             modifier = Modifier
         ) {
             Text(
-                text = "Signals",
+                text = stringResource(id = R.string.signals),
                 style = DefaultTextStyle.copy(
                     color = Color.White,
                     fontFamily = FontFamilyAvenirHeavy,

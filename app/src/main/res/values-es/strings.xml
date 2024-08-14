@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">TradingOrange</string>
+    <string name="contact_us_title">Contacta con nosotras!</string>
+    <string name="contact_us_text">Ponte en contacto por correo electrónico %1$s</string>
+    <string name="write_to_email">Escribe al correo electrónico</string>
+    <string name="bottom_nav_menu_discover">Descubrir</string>
+    <string name="bottom_nav_menu_training">Capacitación</string>
+    <string name="bottom_nav_menu_signals">Señales</string>
+    <string name="bottom_nav_menu_contact_us">Contacta con nosotras</string>
+    <string name="signals">Señales</string>
+    <string name="copy_signal">Copiar señal</string>
+    <string name="copied_times">Copiado: %1$d veces</string>
+    <string name="up">ARRIBA</string>
+    <string name="down">ABAJO</string>
+    <string name="earings">Ganancias</string>
+    <string name="time">Tiempo</string>
+    <string name="amount">Cantidad</string>
+    <string name="practice_balance">Practica el equilibrio</string>
+    <string name="assets">Activos</string>
+    <string name="seconds">%1$d seg</string>
+    <string name="minutes">%1$d mín</string>
+    <string name="trade_history">Historial comercial</string>
+    <string name="news">Noticias</string>
+    <string name="strategies">Estrategias</string>
+    <string name="quick_reads">Lecturas rápidas</string>
+    <string name="see_all">Ver todo</string>
+    <string name="type_of_strategy">Tipo de estrategia</string>
+    <string name="timeframe">Periodo de tiempo</string>
+    <string name="assets_to_trade">Activos para negociar</string>
+</resources>

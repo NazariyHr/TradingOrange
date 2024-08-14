@@ -1,6 +1,7 @@
 package com.trading.orange.presentation.navigation.components
 
 import androidx.annotation.DrawableRes
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Icon
@@ -9,6 +10,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -21,7 +23,7 @@ import com.trading.orange.presentation.common.theme.TradingOrangeTheme
 @Composable
 fun NavBarItem(
     @DrawableRes icon: Int,
-    title: String,
+    @StringRes titleId: Int,
     isSelected: Boolean,
     modifier: Modifier = Modifier
 ) {
@@ -38,7 +40,7 @@ fun NavBarItem(
         )
 
         Text(
-            text = title,
+            text = stringResource(id = titleId),
             style = DefaultTextStyle.copy(
                 color = if (isSelected) ColorOrange else ColorLightGray,
                 fontSize = 12.sp
@@ -56,7 +58,7 @@ private fun NavBarItemPreview() {
     TradingOrangeTheme {
         NavBarItem(
             icon = R.drawable.ic_menu_discover,
-            title = "Discover",
+            titleId = R.string.bottom_nav_menu_discover,
             isSelected = true,
             modifier = Modifier
         )

@@ -27,12 +27,14 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onPlaced
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.NavController
+import com.trading.orange.R
 import com.trading.orange.domain.model.NewsArticle
 import com.trading.orange.domain.model.QuickReadArticle
 import com.trading.orange.domain.model.StrategyArticle
@@ -110,7 +112,7 @@ private fun DiscoverScreen(
                 modifier = Modifier.padding(horizontal = 16.dp)
             ) {
                 Text(
-                    text = "News",
+                    text = stringResource(id = R.string.news),
                     style = DefaultTextStyle.copy(
                         color = Color.White,
                         fontFamily = FontFamilyAvenirHeavy,
@@ -120,7 +122,7 @@ private fun DiscoverScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 if (!state.news.isNullOrEmpty()) {
                     Text(
-                        text = "See all",
+                        text = stringResource(id = R.string.see_all),
                         style = DefaultTextStyle.copy(
                             color = ColorOrange,
                             fontFamily = FontFamilyAvenirLight,
@@ -178,7 +180,7 @@ private fun DiscoverScreen(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 32.dp)
             ) {
                 Text(
-                    text = "Strategies",
+                    text = stringResource(id = R.string.strategies),
                     style = DefaultTextStyle.copy(
                         color = Color.White,
                         fontFamily = FontFamilyAvenirHeavy,
@@ -188,7 +190,7 @@ private fun DiscoverScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 if (!state.strategies.isNullOrEmpty()) {
                     Text(
-                        text = "See all",
+                        text = stringResource(id = R.string.see_all),
                         style = DefaultTextStyle.copy(
                             color = ColorOrange,
                             fontFamily = FontFamilyAvenirLight,
@@ -245,7 +247,7 @@ private fun DiscoverScreen(
                 modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 32.dp)
             ) {
                 Text(
-                    text = "Quick Reads",
+                    text = stringResource(id = R.string.quick_reads),
                     style = DefaultTextStyle.copy(
                         color = Color.White,
                         fontFamily = FontFamilyAvenirHeavy,
@@ -255,7 +257,7 @@ private fun DiscoverScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 if (!state.quickReads.isNullOrEmpty()) {
                     Text(
-                        text = "See all",
+                        text = stringResource(id = R.string.see_all),
                         style = DefaultTextStyle.copy(
                             color = ColorOrange,
                             fontFamily = FontFamilyAvenirLight,

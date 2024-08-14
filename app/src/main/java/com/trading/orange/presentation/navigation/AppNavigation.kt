@@ -3,10 +3,7 @@ package com.trading.orange.presentation.navigation
 import android.os.Build
 import android.os.Bundle
 import android.os.Parcelable
-import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.EnterTransition
-import androidx.compose.animation.ExitTransition
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.slideIn
@@ -29,10 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.IntOffset
-import androidx.navigation.NavBackStackEntry
-import androidx.navigation.NavDeepLink
 import androidx.navigation.NavDestination
-import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
 import androidx.navigation.NavOptionsBuilder
 import androidx.navigation.NavType
@@ -57,7 +51,6 @@ import com.trading.orange.presentation.navigation.components.BottomNavigationBar
 import kotlinx.serialization.encodeToString
 import kotlinx.serialization.json.Json
 import kotlin.enums.EnumEntries
-import kotlin.reflect.KType
 import kotlin.reflect.typeOf
 
 @Composable
@@ -405,20 +398,6 @@ fun NavDestination.getRootRoute(): String? {
     } else {
         parent!!.getRootRoute() ?: parent?.route
     }
-}
-
-inline fun <reified T : Any> NavGraphBuilder.composableNoTransition(
-    typeMap: Map<KType, @JvmSuppressWildcards NavType<*>> = emptyMap(),
-    deepLinks: List<NavDeepLink> = emptyList(),
-    noinline content: @Composable AnimatedContentScope.(NavBackStackEntry) -> Unit
-) {
-    composable<T>(
-        typeMap = typeMap,
-        deepLinks = deepLinks,
-        enterTransition = { EnterTransition.None },
-        exitTransition = { ExitTransition.None },
-        content = content
-    )
 }
 
 /**
