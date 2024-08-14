@@ -970,6 +970,7 @@ private fun TrainingScreenChartPreview() {
                     instrument = "EUR".toInstrument(),
                     betAmount = 50f,
                     result = 75f,
+                    betType = BetType.UP,
                     time = Calendar.getInstance().timeInMillis
                 )
             ),
@@ -1011,6 +1012,7 @@ private fun TrainingScreenBetHistoryPreview() {
         betResults.add(
             BetResult(
                 instrument = instruments.random(),
+                betType = BetType.entries.random(),
                 betAmount = amount,
                 result = if (win) amount else 0 - amount,
                 time = Calendar.getInstance().timeInMillis

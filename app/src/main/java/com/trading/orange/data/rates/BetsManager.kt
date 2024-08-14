@@ -117,6 +117,7 @@ class BetsManager(
 
             betResultsManager.addNewBetResult(
                 instrument = instrumentName.toInstrument(),
+                betType = bet.type.name,
                 betAmount = bet.amount.toFloat(),
                 result = betResult,
                 time = endTime

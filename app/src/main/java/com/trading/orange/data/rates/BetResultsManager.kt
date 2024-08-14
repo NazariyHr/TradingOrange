@@ -21,6 +21,7 @@ class BetResultsManager @Inject constructor(
 
     fun addNewBetResult(
         instrument: Instrument,
+        betType: String,
         betAmount: Float,
         result: Float,
         time: Long
@@ -30,6 +31,7 @@ class BetResultsManager @Inject constructor(
                 BetResultEntity(
                     id = 0,
                     instrumentName = instrument.name,
+                    betType = betType,
                     betAmount = betAmount,
                     result = result,
                     time = time,

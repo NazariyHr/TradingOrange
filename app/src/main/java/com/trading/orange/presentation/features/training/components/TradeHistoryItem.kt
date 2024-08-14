@@ -17,6 +17,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.trading.orange.R
 import com.trading.orange.domain.model.rates.BetResult
+import com.trading.orange.domain.model.rates.BetType
 import com.trading.orange.domain.model.rates.toInstrument
 import com.trading.orange.presentation.common.theme.ColorGreen
 import com.trading.orange.presentation.common.theme.ColorRed
@@ -51,7 +52,7 @@ fun TradeHistoryItem(
             Row {
                 Image(
                     painter = painterResource(
-                        id = if (betResult.result < 0f) R.drawable.ic_arrow_loose else R.drawable.ic_arrow_win
+                        id = if (betResult.betType == BetType.DOWN) R.drawable.ic_arrow_loose else R.drawable.ic_arrow_win
                     ),
                     contentDescription = null,
                     modifier = Modifier.size(24.dp)
@@ -96,6 +97,7 @@ private fun TradeHistoryItemWinPreview() {
     TradeHistoryItem(
         betResult = BetResult(
             instrument = "JPY".toInstrument(),
+            betType = BetType.UP,
             betAmount = 10f,
             result = 17f,
             time = Calendar.getInstance().timeInMillis
@@ -109,6 +111,7 @@ private fun TradeHistoryItemLoosePreview() {
     TradeHistoryItem(
         betResult = BetResult(
             instrument = "JPY".toInstrument(),
+            betType = BetType.DOWN,
             betAmount = 10f,
             result = -10f,
             time = Calendar.getInstance().timeInMillis

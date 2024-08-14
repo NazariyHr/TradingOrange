@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.trading.orange.R
 import com.trading.orange.domain.model.rates.BetResult
+import com.trading.orange.domain.model.rates.BetType
 import com.trading.orange.domain.model.rates.toInstrument
 import com.trading.orange.presentation.common.theme.ColorGreen
 import com.trading.orange.presentation.common.theme.ColorRed
@@ -89,6 +90,7 @@ private fun BetResultItemPreviewNegative() {
         BetResultItem(
             betResult = BetResult(
                 instrument = "EUR".toInstrument(),
+                betType = BetType.UP,
                 betAmount = 10f,
                 result = -10f,
                 time = Calendar.getInstance().timeInMillis
@@ -104,6 +106,7 @@ private fun BetResultItemPreviewPositive() {
         BetResultItem(
             betResult = BetResult(
                 instrument = "EUR".toInstrument(),
+                betType = BetType.UP,
                 betAmount = 10f,
                 result = 17f,
                 time = Calendar.getInstance().timeInMillis
