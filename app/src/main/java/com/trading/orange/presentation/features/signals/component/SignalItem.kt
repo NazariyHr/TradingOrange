@@ -169,7 +169,7 @@ fun SignalItem(
                 modifier = Modifier
                     .padding(top = 12.dp)
                     .then(
-                        if (signal.availableToBet && abs(endTime - currTime) > 2000)
+                        if (signal.availableToBet && abs(endTime - currTime) > 2000 && signal.amountForBet > 0)
                             Modifier.safeSingleClick {
                                 onCopySignalClicked()
                             }
@@ -177,7 +177,7 @@ fun SignalItem(
                     )
                     .fillMaxWidth()
                     .then(
-                        if (signal.availableToBet && abs(endTime - currTime) > 2000) {
+                        if (signal.availableToBet && abs(endTime - currTime) > 2000 && signal.amountForBet > 0) {
                             Modifier.background(
                                 color = ColorOrange,
                                 shape = RoundedCornerShape(8.dp)
