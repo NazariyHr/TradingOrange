@@ -4,7 +4,7 @@
     <string name="contact_us_title">Связаться с нами!</string>
     <string name="contact_us_text">В случае вопросов обращайтесь по имейл %1$s</string>
     <string name="write_to_email">Написать нам на почту</string>
-    <string name="bottom_nav_menu_discover">Обнаружить</string>
+    <string name="bottom_nav_menu_discover">Статьи</string>
     <string name="bottom_nav_menu_training">Обучение</string>
     <string name="bottom_nav_menu_signals">Сигналы</string>
     <string name="bottom_nav_menu_contact_us">Связаться с нами</string>
@@ -15,9 +15,9 @@
     <string name="down">ВНИЗ</string>
     <string name="earings">Доход</string>
     <string name="time">Время</string>
-    <string name="amount">Количество</string>
-    <string name="practice_balance">Практикуйте баланс</string>
-    <string name="assets">Ресурсы</string>
+    <string name="amount">Сумма</string>
+    <string name="practice_balance">Демо баланс</string>
+    <string name="assets">Активы</string>
     <string name="seconds">%1$d сек</string>
     <string name="minutes">%1$d мин</string>
     <string name="trade_history">История торговли</string>
