@@ -9,9 +9,9 @@ import io.appwrite.services.Storage
 class AppWriteStorage {
     companion object {
         private const val ENDPOINT = "https://cloud.appwrite.io/v1"
-        private const val PROJECT_ID = "66b4af9f0035af13ee03"
+        private const val PROJECT_ID = "66bdd7ca00045b0e473f"
         private const val SECRET_KEY =
-            "8638506b884ea3f79b211652fc0548eaaa85762828f140c191536f57984c20c683e432d01982bf1e8705d3a5a321f9cdafad37837badda182abf7d9eff2d083fd257eb7522e2deb7ba5dde1b4a12c09718e187b6251d41208d3928f3025109b3dcc2bd18d589e7cf7713ff802d3948bdefa61b078e449eb5ef19880358dd1e0f"
+            "66e7a7e2bd73c85f00cd236eee57d93c52010d5165df24b16f3600677617aa05f8141d677c296488df8dd1591cb5fbe5c39441bbd664dd481f7bf4c6380b9afd5c8632c7536328332219656b920c31d17666d25fe063ab149f10c4421b3f30c525765d6e85e061b1e4f903c08d8ce80090445e8e81d5dbc091a13c3a498610a4"
     }
 
     private val client = Client()
